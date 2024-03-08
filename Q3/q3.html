@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" href="style.css">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        let submissions = []
+        function submitForm(event){
+            event.preventDefault();
+            const formData = new FormData(event.target)
+            const requiredFields = ['Name', 'Number', 'Email', 'Resume', 'Cover Letter', 'Highest Level of Education', 'University', 'Major', 'Graduation Year', 'Employment History', 'Skills', 'Certifications', 'Availability', 'Schedule', 'Willing to Relocate?', 'Why do you want to work in this company?', 'Where do you see yourself in 5 years?', 'Terms & Conditions', 'Privacy Policy'];
+            for (const field of requiredFields) {
+                if (!formData.get(field)) {
+                alert(`Please fill in the required field: ${field}`);
+                return;
+                } 
+            }
+            const email = formData.get('Email');
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid email address');
+                return;
+            }
+            const phone = formData.get('Number');
+            const phoneRegex = /\+[0-9]{2}-[0-9]{10}/;
+            if (!phoneRegex.test(phone)) {
+                alert('Please enter a valid phone number');
+                return;
+            }
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+            submissions.push(data);
+            console.log('Form submitted:', data);
+            document.getElementById('job-application-form').reset();
+        }
+        function viewApplicationsAsTable() {
+            const tableContainer = document.getElementById('table-container');
+            tableContainer.style.display = 'block';
+            const table = document.createElement('table');
+            const headerRow = table.insertRow(0);
+            const keys = Object.keys(submissions[0]);
+            keys.forEach((key) => {
+                const th = document.createElement('th');
+                th.textContent = key;
+                headerRow.appendChild(th);
+            });
+            submissions.forEach((submission, index) => {
+                const row = table.insertRow(index + 1);
+                keys.forEach((key) => {
+                    const cell = row.insertCell(-1);
+                    cell.textContent = submission[key];
+                });
+            });
+            tableContainer.innerHTML = '';
+            tableContainer.appendChild(table);
+        }
+    </script>
+</head>
+<body>
+    <form id ="job-application-form" onsubmit="submitForm(event)">
+        <h3>Personal Information</h3>
+        <span>Name &ThickSpace;<input type="text" name="Name" placeholder="First Name and Last Name"></span>
+        <br>
+        <span>Phone Number &ThickSpace;<input type="text" name="Number" placeholder="+XX-XXXXXXXXXX"></span>
+        <br>
+        <span>Email Address &ThickSpace;<input type="text" name="Email" placeholder="abc@gmail.com"></span>
+        <h3>Resume and Cover Letter</h3>
+        <span>Resume  &ThickSpace;<input type="file" name="Resume" id="file" accept=".txt, .pdf, .docx"></span>
+        <br>
+        <span>Cover Letter &ThickSpace;<input type="text" name="Cover Letter" placeholder="Type here.."></span>
+        <br>
+        <h3>Education</h3>
+        <span>Highest Level of Education Attained &ThickSpace;<input type="text" name="Highest Level of Education" placeholder="BS, MS etc."></span>
+        <br>
+        <span>Name of University &ThickSpace;<input type="text" name="University"></span>
+        <br>
+        <span>Major &ThickSpace;<input type="text"   name="Major"></span>
+        <br>
+        <span>Graduation Year &ThickSpace;<input type="text"   name="Graduation Year"></span>
+        <br>
+        <span>Employment History &ThickSpace;<input type="text"   name="Employment History"></span>
+        <h3>Previous Job Titles</h3>
+        <span>Company Name &ThickSpace;<input type="text"   name="Company"></span>
+        <br>
+        <span>Employment Date &ThickSpace;<input type="text"   name="Employment Date"></span>
+        <br>
+        <span>Job Reponsibilities &ThickSpace;<input type="text"   name="Job Reponsibilities"></span>
+        <br>
+        <h3>Skills</h3>
+        <span>Relevant Skills &ThickSpace;<input type="text"   name="Skills"></span>
+        <br>
+        <span>Certifications &ThickSpace;<input type="text"   name="Certifications"></span>
+        <br>
+        <h3>Availability</h3>
+        <span>Start Date &ThickSpace;<input type="text"   name="Availability"></span>
+        <br>
+        <span>Preferrred Work Schedule &ThickSpace;<input type="text"   name="Schedule"></span>
+        <br>
+        <span>Willingness to Relocate &ThickSpace;<input type="checkbox"   name="Willing to Relocate?"></span>
+        <br>
+        <h3>References</h3>
+        <span>Reference Name &ThickSpace;<input type="text"  name="Reference Name"></span>
+        <br>
+        <span>Reference Contact Information &ThickSpace;<input type="text" name="Reference Contact"></span>
+        <br>
+        <span>Relationship to Applicant &ThickSpace;<input type="text"   name="Relationship to Applicant"></span>
+        <br>
+        <h3>Additional Questions</h3>
+        <span>Why do you want to work for this company? &ThickSpace;<input type="text"   name="Why do you want to work in this company?"></span>
+        <br>
+        <span>Where do you see yourself in 5 years? &ThickSpace;<input type="text"   name="Where do you see yourself in 5 years?"></span>
+        <br>
+        <h3>Consent & Agreement</h3>
+        <span>I agree to the terms and conditions&ThickSpace;<input type="checkbox"   name="Terms & Conditions"></span>
+        <br>
+        <span>I have read and acknowledged the Privacy Policy&ThickSpace;<input type="checkbox"   name="Privacy Policy"></span>
+        <br>
+        <input type="submit" value="Submit">
+    </form>
+    <div id="view-table-container">
+        <button onclick="viewApplicationsAsTable()">View Applications as Table</button>
+    </div>
+    <div id="table-container"></div>
+</body>
+</html>
